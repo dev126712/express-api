@@ -12,6 +12,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscription', subscriptionRouter);
 
+
 app.get('/', (req, res) => {
     res.send('welcome to sub tracker api');
 });

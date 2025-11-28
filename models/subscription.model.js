@@ -3,19 +3,19 @@ import mongoose from "mongoose";
 const subscriptionSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
+        required: [true, 'Subscription Name is required'],
         trim: true,
-        minLenght: 2,
-        maxLenght: 100,
+        minLength: 2,
+        maxLength: 100,
     },
     price: {
         type: Number,
-        required: true,
-        min: 0,
+        required: [true, 'Subscription Price is required'],
+        min: [0, 'Subscription Price must be a positive number'],
     },
     currency: {
         type: String,
-        enum: ['daily', 'weekly', 'monthly', 'yearly'],
+        enum: ['USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD'],
         default: 'USD'
     },
     frequency: {
@@ -24,12 +24,12 @@ const subscriptionSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: ['entertainment', 'education', 'productivity', 'health', 'other'],
-        required: true,
+        enum: ['entertainment', 'education', 'productivity', 'health', 'other', 'business'],
+        required: [true, 'Subscription Category is required'],
     },
     paymentMethod: {
         type: String,
-        required: true,
+        required: [true, 'Payment Method is required'],
         trim: true,
     },
     status: {
@@ -49,7 +49,6 @@ const subscriptionSchema = new mongoose.Schema({
     },
     renewalDate: {
         type: Date,
-        required: true,
         validate: {
             validator: function(value) {
                 return value > this.startDate;
@@ -79,6 +78,7 @@ subscriptionSchema.pre('save', function(next) {
     if (this.renewalDate < new Date()) {
         this.status = 'expired';
     }
+    next();
 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);
