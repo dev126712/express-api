@@ -6,9 +6,8 @@ COPY --chown=node:node ["package.json", "package-lock.json", "./" ]
 
 RUN npm ci
 
-COPY --chown=node:node . ./
+COPY --chown=node:node . .
 
-RUN npm run build
 
 
 FROM node:20-alpine
