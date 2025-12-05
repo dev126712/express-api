@@ -50,12 +50,13 @@ jobs:
         push: false
         tags: ${{ env.IMAGE_TAG }}
         load: true
-        output: type=docker,dest=/tmp/${{ env.IMAGE_NAME }}.tar
+        outputs: type=docker,dest=/tmp/${{ env.IMAGE_NAME }}.tar
 
     - name: Upload Image Artifact
       uses:  actions/upload-artifact@v4
       with:
         name: $ {{ env.IMAGE_NAME }}.tar
+        path: /tmp/${{ env.IMAGE_NAME }}.tar
 
   trivy-scan:
     runs-on: ubuntu-latest
