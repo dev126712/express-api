@@ -2,7 +2,7 @@ import mongose from 'mongoose';
 import { DB_URI, NODE_ENV } from '../config/env.js';
 
 if(!DB_URI){
-    throw new Error('please define the MONGO_URI environment variable inside .env.<development/production>.local file');
+    throw new Error('please define the DBS_URI environment variable inside .env.<development/production>.local file');
 }
 
 const connectDB = async () => {
