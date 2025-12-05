@@ -16,7 +16,7 @@ FROM node:20-alpine
 WORKDIR /usr/src/app
 
 
-COPY --from=builder --chown=node:node /usr/src/app/ ./usr/src/app
+COPY --from=builder --chown=node:node /usr/src/app/ ./
 
 ENV PORT=5500 \
     NODE_ENV=production \

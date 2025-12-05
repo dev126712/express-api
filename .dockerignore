@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
-Dockerfile
+Dockerfile*
 .env
 .env*.local
 .vscode/
@@ -8,7 +8,7 @@ Dockerfile
 .gitignore
 .idea/
 .DS_Store
-dist/
+dist
 build/
 coverage/
 logs/
