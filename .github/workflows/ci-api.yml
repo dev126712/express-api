@@ -65,7 +65,7 @@ jobs:
     - name: Download Image artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ env.IMAGE }}
+        name: ${{ env.IMAGE_NAME }}
         path: /tmp
   
     - name: Load image
