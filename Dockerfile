@@ -2,19 +2,28 @@ FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
-COPY package.json package*.json ./
+COPY --chown=node:node ["package.json", "package-lock.json", "./" ]
 
-RUN npm install
+RUN npm ci
 
-COPY . .
+COPY --chown=node:node . ./
 
-FROM node:20-alpine AS runner
+RUN npm run build
 
-WORKDIR /src
 
-COPY --from=builder /usr/src/app/node_modules ./node_modules
-COPY --from=builder /usr/src/app/package*.json ./
+FROM node:20-alpine
 
-EXPOSE 3000
+WORKDIR /usr/src/app
+
+
+COPY --from=builder --chown=node:node /usr/src/app/ ./usr/src/app
+
+ENV PORT=5500 \
+    NODE_ENV=production \
+    SERVER_URL="http://localhost:5500"
+
+USER node
+
+EXPOSE 5500
 
 CMD ["node", "app.js"]
