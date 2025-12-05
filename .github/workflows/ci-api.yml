@@ -55,7 +55,7 @@ jobs:
     - name: Upload Image Artifact
       uses:  actions/upload-artifact@v4
       with:
-        name: $ {{ env.IMAGE_NAME }}.tar
+        name: $ {{ env.IMAGE_NAME }}
         path: /tmp/${{ env.IMAGE_NAME }}.tar
 
   trivy-scan:
