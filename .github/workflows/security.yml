@@ -6,8 +6,6 @@ on:
       - main
     paths: '**'
 
-permissions:
-  contents: read
 
 jobs: 
   secirity-scan-on-workflows:
