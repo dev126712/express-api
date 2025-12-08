@@ -21,7 +21,7 @@ jobs:
     - name: Run Checkov Security Scan on frontend
       uses: bridgecrewio/checkov-action@master
       with:
-        directory:  .github/workflows/**
+        directory:  .github/workflows
         output_format: cli
         soft_fail: true
         quiet: true  
