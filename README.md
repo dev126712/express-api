@@ -19,4 +19,190 @@ ARCJET_ENV="development"
 QSTASH_TOKEN=
 QSTASH_URL="https://qstash.upstash.io"
 ````
+# 1 Application ci ( ci-api )
+````
+name: ci-api
+on:
+  push:
+    branches:
+      - main
+    paths:
+    - '**'
 
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  IMAGE_NAME: express-api
+  IMAGE_LATEST_TAG: ${{ secrets.GIT_USERNAME }}/express-api:latest
+  IMAGE_TAG: express-api:latest, express-api:${{ github.sha }}
+
+
+jobs:
+````
+### -1 Security scan Snyk
+````
+  security-snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=low
+````
+### -2 Build docker image & upload image artifac for further step
+
+````
+build:
+    needs: security-snyk
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up QEMU 
+      uses: docker/setup-qemu-action@v3 
+
+    - name: set up docker
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build the Docker images
+      uses: docker/build-push-action@v6
+      with: 
+        context: ./
+        push: false
+        tags: ${{ env.IMAGE_TAG }}
+        load: true
+        outputs: type=docker,dest=/tmp/${{ env.IMAGE_NAME }}.tar
+
+    - name: Upload Image Artifact
+      uses:  actions/upload-artifact@v4
+      with:
+        name: ${{ env.IMAGE_NAME }}
+        path: /tmp/${{ env.IMAGE_NAME }}.tar
+
+````
+### -3 Run Trivy scan
+
+````
+  trivy-scan:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download Image artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.IMAGE_NAME }}
+        path: /tmp
+  
+    - name: Load image
+      run: |
+        docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
+        docker image ls -a
+
+    -  name: Install Trivy
+       run: |
+        sudo apt-get update
+        sudo apt-get install -y curl
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.57.0
+  
+    - name: Download Trivy vulnerability database
+      run: trivy image --download-db-only
+      
+    - name: Run Trivy vulnerability scan
+      run: |
+        trivy image \
+          --exit-code 0 \
+          --format table \
+          --ignore-unfixed \
+          --pkg-types os,library \
+          --severity CRITICAL,HIGH,MEDIUM \
+          ${{ env.IMAGE_NAME }}:latest
+````
+### -4 Push image to Docker Hub
+
+````
+  push-image:
+    name: push image to docker hub
+    runs-on: ubuntu-latest
+    needs: trivy-scan
+    permissions:
+      contents: write 
+
+    steps:
+    - name: Download Image artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.IMAGE_NAME }}
+        path: /tmp
+
+    - name: Load image
+      run: |
+        docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
+        docker image ls -a
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Tag Image with Docker Hub Username Prefix
+      run: |
+        DOCKER_REPO="${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}"
+        
+        docker tag ${{ env.IMAGE_NAME }}:latest $DOCKER_REPO:latest
+        
+        docker tag ${{ env.IMAGE_NAME }}:latest $DOCKER_REPO:${{ github.sha }}
+
+    - name: Push Image to Docker Hub
+      run: |
+        # Use the fully qualified name defined in the tag step
+        DOCKER_REPO="${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}"
+        
+        docker push $DOCKER_REPO:latest
+        docker push $DOCKER_REPO:${{ github.sha }}
+
+    - name: Docker - Logout
+      run: docker logout
+````
+
+# 2 Security scan checkov
+````
+name: security check
+
+on:
+  push:
+    branches:
+      - main
+    paths: '**'
+
+permissions:
+  contents: read
+
+jobs: 
+````
+### Security scan on workflows yml files
+````
+  secirity-scan-on-workflows:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v4
+
+    - name: Run Checkov Security Scan on yml files
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory:  .github/workflows
+        output_format: cli
+        soft_fail: true
+        quiet: true  
+````
