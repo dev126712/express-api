@@ -163,7 +163,6 @@ build:
 
     - name: Push Image to Docker Hub
       run: |
-        # Use the fully qualified name defined in the tag step
         DOCKER_REPO="${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}"
         
         docker push $DOCKER_REPO:latest
