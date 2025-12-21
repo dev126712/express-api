@@ -19,6 +19,15 @@ ARCJET_ENV="development"
 QSTASH_TOKEN=
 QSTASH_URL="https://qstash.upstash.io"
 ````
+|  |   |   |   |
+|------|------|------|------|
+|CREATE|	POST|	/api/v1/subscriptions	|Adds a new sub|
+READ	|GET|	/api/v1/subscriptions	|Gets all user subs|
+UPDATE	|PUT|	/api/v1/subscriptions/:id|	Edits one sub|
+DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
+
+
+# CI/CD Pipelines
 # 1 Application ci ( ci-api )
 ````
 name: ci-api
