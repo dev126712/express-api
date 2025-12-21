@@ -21,12 +21,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      
+      - name: Install Backend Dependencies
+        run: npm install --prefix server
+        
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=low
+          args: --severity-threshold=low --file=server/package.json
 
   build:
     needs: security-snyk
@@ -46,7 +50,7 @@ jobs:
     - name: Build the Docker images
       uses: docker/build-push-action@v6
       with: 
-        context: ./
+        context: ./server
         push: false
         tags: ${{ env.IMAGE_TAG }}
         load: true
