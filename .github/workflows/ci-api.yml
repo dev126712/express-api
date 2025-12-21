@@ -26,7 +26,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          directory: server
+          entryPoint: server/package.json
           args: --severity-threshold=low
 
   build:
