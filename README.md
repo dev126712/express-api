@@ -19,6 +19,15 @@ ARCJET_ENV="development"
 QSTASH_TOKEN=
 QSTASH_URL="https://qstash.upstash.io"
 ````
+
+|  |   |   |   |
+|------|------|------|------|
+|CREATE|	POST|	/api/v1/user	|Create User|
+READ	|GET|	/api/v1/user	|Gets all users|
+UPDATE	|PUT|	/api/v1/user/:id|	Edits User|
+DELETE|	DELETE|	/api/v1/user/:id	|Delete User|
+
+
 |  |   |   |   |
 |------|------|------|------|
 |CREATE|	POST|	/api/v1/subscriptions	|Adds a new sub|
