@@ -9,6 +9,7 @@ Dockerfile*
 .idea/
 .DS_Store
 dist
+
 build/
 coverage/
 logs/
