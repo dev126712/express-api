@@ -1,0 +1,22 @@
+services:
+  # Backend Express API Service
+  backend:
+    build: ./server
+    container_name: subtracker_api
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env.production.local
+
+  # Frontend Vite Service
+  frontend:
+    build: ./client
+    container_name: subtracker_ui
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3000/api/v1
+
+

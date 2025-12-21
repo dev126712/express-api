@@ -8,7 +8,7 @@ subscriptionRouter.get('/', getAllSubscriptions); // List all subscriptions
 
 subscriptionRouter.get('/:id', authorize, getSubscriptionById); // Get subscription details by ID
 
-subscriptionRouter.post('/', authorize, createSubscription); // Create a new subscription
+subscriptionRouter.post('/:id/', authorize, createSubscription); // Create a new subscription
 
 subscriptionRouter.put('/:id', authorize, updateSubscription); // Update subscription by ID
 

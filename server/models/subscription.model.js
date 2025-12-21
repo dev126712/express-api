@@ -29,6 +29,7 @@ const subscriptionSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
+        enum: ['credit_card', 'debit_card', 'paypal', 'bank_transfer', 'crypto', 'other'],
         required: [true, 'Payment Method is required'],
         trim: true,
     },
