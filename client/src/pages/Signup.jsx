@@ -22,8 +22,17 @@ const Signup = () => {
       const response = await API.post('/auth/sign-up', formData);
       
       if (response.status === 201 || response.status === 200) {
-        // Redirect to login after successful account creation
-        navigate('/login');
+
+       const token = response.data.data.token;
+        
+        // Save the token to local storage
+        localStorage.setItem('token', token);
+
+        // Optional: If you use a context/state to track auth, set it to true
+        // setAuth(true); 
+
+        // Navigate directly to the dashboard instead of login
+        navigate('/dashboard');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong. Please try again.');

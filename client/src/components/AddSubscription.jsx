@@ -8,7 +8,8 @@ const AddSubscription = ({ isOpen, onClose, onRefresh }) => {
     currency: 'USD',
     frequency: 'monthly',
     category: 'entertainment',
-    startDate: '',
+    startDate: new Date().toISOString().split('T')[0],
+    paymentMethod: 'credit_card',
   });
 
   if (!isOpen) return null;
@@ -16,11 +17,17 @@ const AddSubscription = ({ isOpen, onClose, onRefresh }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.post('/subscription', formData);
+      const payload = { 
+        ...formData, 
+        price: Number(formData.price) 
+      };
+
+      await API.post('/subscription', payload);
       onRefresh(); // Refresh the dashboard list
       onClose();   // Close modal
     } catch (err) {
       alert(err.response?.data?.message || "Failed to add subscription");
+      console.log(err);
     }
   };
 

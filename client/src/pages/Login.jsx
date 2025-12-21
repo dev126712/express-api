@@ -11,7 +11,15 @@ const Login = ({ setAuth }) => {
     e.preventDefault();
     try {
       const response = await API.post('/auth/sign-in', formData);
+
+
       if (response.status === 200 || response.status === 201) {
+        const token = response.data.data.token;
+      
+        // Save it so Axios can use it later
+        localStorage.setItem('token', token);
+
+
         setAuth(true);
         navigate('/dashboard');
       }
