@@ -190,7 +190,7 @@ build:
       run: docker logout
 ````
 
-2 Security scan checkov
+2 Security scan checkov ( security.yml )
 ````
 name: security check
 
