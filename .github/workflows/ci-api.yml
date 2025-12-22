@@ -4,7 +4,12 @@ on:
     branches:
       - main
     paths:
-    - 'server/**'
+      - 'server/**'
+    paths-ignore:
+       - '**.md'
+       - '.dockerignore'
+       - '.gitignore'
+     
 
 permissions:
   contents: read
