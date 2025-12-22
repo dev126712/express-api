@@ -44,6 +44,7 @@ UPDATE	|PUT|	/api/v1/subscriptions/:id|	Edits one sub|
 DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
 
 # DevSecOps
+![alt text](https://github.com/dev126712/dockerized-three-tier-app/blob/64105d4d0de1f6b2286aa6f47ae82d9ba965c086/licensed-image.jpeg)
 #### CI/CD Pipelines
  1 Application ci ( ci-api.yml, ci-ui.yml )
 ````
