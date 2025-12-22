@@ -48,13 +48,13 @@ DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
 #### CI/CD Pipelines
 Workflows:
 - ci-ui.yml:
-  - Static scan code with checkov
+  - Static scan code with checkov (SAST)
   - Build Image
   - Dynamic scan code with Trivy
   - Push Image to DockerHub
    
 - ci-api.yml:
-  - Static scan code with checkov
+  - Static scan code with checkov (SAST)
   - Build Image
   - Dynamic scan code with Trivy
   - Push Image to DockerHub
