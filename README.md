@@ -1,4 +1,4 @@
-env.<development/production>.local
+.env.<development/production>.local
 ````
 PORT=
 NODE_ENV='development'
