@@ -21,6 +21,13 @@ QSTASH_TOKEN=
 QSTASH_URL="https://qstash.upstash.io"
 ````
 
+#### client/
+.env.<development/production>.local
+````
+VITE_API_BASE_URL=http://localhost:3000/api/v1
+````
+
+
 |  |   |   |   |
 |------|------|------|------|
 |CREATE|	POST|	/api/v1/user	|Create User|
