@@ -35,8 +35,8 @@ READ	|GET|	/api/v1/subscriptions	|Gets all user subs|
 UPDATE	|PUT|	/api/v1/subscriptions/:id|	Edits one sub|
 DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
 
-
-# CI/CD Pipelines
+# DevSecOps
+#### CI/CD Pipelines
  1 Application ci ( ci-api.yml, ci-ui.yml )
 ````
 name: ci-api
