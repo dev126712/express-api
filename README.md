@@ -50,13 +50,15 @@ Workflows:
 - ci-ui.yml:
   - Static scan code with checkov (SAST, SCA)
   - Build Image
-  - Dynamic scan code with Trivy (SCA, Container image security)
+  - Container security with Trivy (SCA, Image layes scan)
+  - Dynamic scan with OWASP ZAP (DAST)
   - Push Image to DockerHub
    
 - ci-api.yml:
   - Static scan code with checkov(SAST, SCA)
   - Build Image
-  - Dynamic scan code with Trivy (SCA, Container image security)
+  - Container security with Trivy (SCA, Image layes scan)
+  - Dynamic scan with OWASP ZAP (DAST)
   - Push Image to DockerHub
 
 - security.yml:
