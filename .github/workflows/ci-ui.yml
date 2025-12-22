@@ -105,19 +105,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Frontend Deps
-        run: npm install --prefix frontend
+        run: npm install --prefix client
 
       - name: sca scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --file=frontend/package.json
+          args: --file=client/package.json
 
       - name: sast scan
         run: |
           npm install -g snyk
-          snyk code test frontend/
+          snyk code test client/
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           
