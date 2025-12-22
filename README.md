@@ -1,7 +1,7 @@
 #### server/
 .env.<development/production>.local
 ````
-PORT=
+PORT=3000
 NODE_ENV='development'
 SERVER_URL=
 
