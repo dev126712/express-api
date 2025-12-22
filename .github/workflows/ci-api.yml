@@ -5,10 +5,9 @@ on:
       - main
     paths:
       - 'server/**'
-    paths-ignore:
-       - '**.md'
-       - '.dockerignore'
-       - '.gitignore'
+      - '!**.md'
+      - '!.dockerignore'
+      - '!.gitignore'
      
 
 permissions:
