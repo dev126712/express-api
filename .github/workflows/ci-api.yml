@@ -101,6 +101,29 @@ jobs:
           --severity CRITICAL,HIGH,MEDIUM \
           ${{ env.IMAGE_NAME }}:latest
 
+
+  dast-scan:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.IMAGE_NAME }}
+          path: /tmp
+
+      - name: Start API for Testing
+        run: |
+          docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
+          docker run -d -p 3000:3000 --name running-api ${{ env.IMAGE_NAME }}:latest
+          sleep 15 
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.13.0
+        with:
+          target: 'http://localhost:3000'
+          fail_action: false
+
   push-image:
     name: push image to docker hub
     runs-on: ubuntu-latest
