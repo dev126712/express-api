@@ -1,4 +1,4 @@
-#### server
+#### server/
 .env.<development/production>.local
 ````
 PORT=
