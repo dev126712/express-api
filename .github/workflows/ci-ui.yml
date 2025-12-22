@@ -1,4 +1,4 @@
-name: ci-api
+name: ui-api
 on:
   push:
     branches:
