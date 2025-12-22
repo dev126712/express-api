@@ -37,7 +37,7 @@ DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
 
 
 # CI/CD Pipelines
-# 1 Application ci ( ci-api )
+ 1 Application ci ( ci-api.yml, ci-ui.yml )
 ````
 name: ci-api
 on:
@@ -59,7 +59,7 @@ env:
 
 jobs:
 ````
-### -1 Security scan Snyk
+ -1 Security scan Snyk
 ````
   security-snyk:
     runs-on: ubuntu-latest
@@ -72,7 +72,7 @@ jobs:
         with:
           args: --severity-threshold=low
 ````
-### -2 Build docker image & upload image artifac for further step
+-2 Build docker image & upload image artifac for further step
 
 ````
 build:
@@ -106,7 +106,7 @@ build:
         path: /tmp/${{ env.IMAGE_NAME }}.tar
 
 ````
-### -3 Run Trivy scan
+-3 Run Trivy scan
 
 ````
   trivy-scan:
@@ -143,7 +143,7 @@ build:
           --severity CRITICAL,HIGH,MEDIUM \
           ${{ env.IMAGE_NAME }}:latest
 ````
-### -4 Push image to Docker Hub
+-4 Push image to Docker Hub
 
 ````
   push-image:
@@ -190,7 +190,7 @@ build:
       run: docker logout
 ````
 
-# 2 Security scan checkov
+2 Security scan checkov
 ````
 name: security check
 
@@ -205,7 +205,7 @@ permissions:
 
 jobs: 
 ````
-### Security scan on workflows yml files
+Security scan on workflows yml files
 ````
   secirity-scan-on-workflows:
     runs-on: ubuntu-latest
