@@ -3,7 +3,7 @@
 ````
 PORT=3000
 NODE_ENV='development'
-SERVER_URL=
+SERVER_URL="http://localhost:5500"
 
 # Database
 DB_URI=
