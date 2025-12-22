@@ -48,16 +48,16 @@ DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
 #### CI/CD Pipelines
 Workflows:
 - ci-ui.yml:
-  - Static scan code with checkov (SAST)
+  - Static scan code with checkov (SAST, SCA)
   - Build Image
-  - Dynamic scan code with Trivy
+  - Dynamic scan code with Trivy (SCA, Container image security)
   - Push Image to DockerHub
    
 - ci-api.yml:
-  - Static scan code with checkov (SAST)
+  - Static scan code with checkov(SAST, SCA)
   - Build Image
-  - Dynamic scan code with Trivy
+  - Dynamic scan code with Trivy (SCA, Container image security)
   - Push Image to DockerHub
 
 - security.yml:
-  - Scans for security flaws in all the workflows files ".yml"
+  - Scans for security flaws in all the workflows files ".yml" (SAST)
