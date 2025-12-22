@@ -5,10 +5,9 @@ on:
       - main
     paths:
       - 'client/**'
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - '.dockerignore'
+      - '!**.md'
+      - '!.gitignore'
+      - '!.dockerignore'
 
 permissions:
   contents: read
