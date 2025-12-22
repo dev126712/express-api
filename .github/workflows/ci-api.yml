@@ -114,8 +114,28 @@ jobs:
       - name: Start API for Testing
         run: |
           docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
-          docker run -d -p 5500:5500 --name running-api ${{ env.IMAGE_NAME }}:latest
-          sleep 20
+          
+          # Start container mapping 5500 to 5500
+          docker run -d \
+            -p 5500:5500 \
+            --name web-api \
+            --health-cmd "curl -f http://localhost:5500 || exit 1" \
+            --health-interval 5s \
+            --health-timeout 5s \
+            --health-retries 5 \
+            ${{ env.IMAGE_NAME }}:latest
+          
+          # Wait for the container to become 'healthy'
+          echo "Waiting for API to pass health check..."
+          for i in {1..10}; do
+            if [ "$(docker inspect --format='{{.State.Health.Status}}' web-api)" == "healthy" ]; then
+              echo "API is Healthy!"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "API failed to start in time"
+          exit 1
 
       - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.13.0
