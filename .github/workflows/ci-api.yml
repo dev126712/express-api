@@ -67,7 +67,7 @@ jobs:
         name: ${{ env.IMAGE_NAME }}
         path: /tmp/${{ env.IMAGE_NAME }}.tar
 
-  trivy-scan:
+  trivy-scan-image:
     runs-on: ubuntu-latest
     needs: build
     steps:
