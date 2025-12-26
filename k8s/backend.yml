@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: django
-        image:  ${{ secrets.GIT_USERNAME }}/express-api:latest 
+        image:  dev126712/express-api:latest 
         ports:
         - containerPort: 5500
 ---
