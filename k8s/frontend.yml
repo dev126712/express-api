@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: react
-        image: ${{ secrets.GIT_USERNAME }}/client-ui:latest
+        image: dev126712/client-ui:latest
         ports:
         - containerPort: 80
 ---
