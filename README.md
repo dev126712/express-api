@@ -26,23 +26,6 @@ QSTASH_URL="https://qstash.upstash.io"
 ````
 VITE_API_BASE_URL=http://localhost:3000/api/v1
 ````
-
-
-|  |   |   |   |
-|------|------|------|------|
-|CREATE|	POST|	/api/v1/user	|Create User|
-READ	|GET|	/api/v1/user	|Gets all users|
-UPDATE	|PUT|	/api/v1/user/:id|	Edits User|
-DELETE|	DELETE|	/api/v1/user/:id	|Delete User|
-
-
-|  |   |   |   |
-|------|------|------|------|
-|CREATE|	POST|	/api/v1/subscriptions	|Adds a new sub|
-READ	|GET|	/api/v1/subscriptions	|Gets all user subs|
-UPDATE	|PUT|	/api/v1/subscriptions/:id|	Edits one sub|
-DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
-
 # DevSecOps
 ![alt text](https://github.com/dev126712/dockerized-three-tier-app/blob/64105d4d0de1f6b2286aa6f47ae82d9ba965c086/licensed-image.jpeg)
 #### CI/CD Pipelines
@@ -63,3 +46,21 @@ Workflows:
 
 - security.yml:
   - Scans for security flaws in all the workflows files ".yml" (SAST)
+
+ 
+
+|  |   |   |   |
+|------|------|------|------|
+|CREATE|	POST|	/api/v1/user	|Create User|
+READ	|GET|	/api/v1/user	|Gets all users|
+UPDATE	|PUT|	/api/v1/user/:id|	Edits User|
+DELETE|	DELETE|	/api/v1/user/:id	|Delete User|
+
+
+|  |   |   |   |
+|------|------|------|------|
+|CREATE|	POST|	/api/v1/subscriptions	|Adds a new sub|
+READ	|GET|	/api/v1/subscriptions	|Gets all user subs|
+UPDATE	|PUT|	/api/v1/subscriptions/:id|	Edits one sub|
+DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
+
