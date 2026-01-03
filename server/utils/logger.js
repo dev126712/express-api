@@ -27,11 +27,17 @@ const targets = [
     }
 ];
 
-const logger = pino(
-  {
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-    redact: ['req.headers.authorization', 'req.body.password', 'password'],
-  },
-  pino.transport({ targets })
-);
+const logger = pino({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  redact: ['req.headers.authorization', 'req.body.password', 'password'],
+  // In production/Docker, we log to console only to avoid EACCES issues
+  transport: process.env.NODE_ENV === 'production' 
+    ? { target: 'pino/file', options: { destination: 1 } } // 1 is stdout
+    : {
+        targets: [
+          { target: 'pino-pretty', options: { colorize: true } },
+          { target: 'pino/file', options: { destination: './logs/app.log', mkdir: true } }
+        ]
+      }
+});
 export default logger;
