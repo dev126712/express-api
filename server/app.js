@@ -17,18 +17,35 @@ import workflowRouter from './routes/workflow.routes.js';
 
 const app = express();
 
+app.set('trust proxy', true); // Moved to top
+app.disable('x-powered-by');
+
+// --- 2. Security Headers (The "Helmet" configuration) ---
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"], // Fixes: "Failure to Define Directive with No Fallback"
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:"],
+      upgradeInsecureRequests: [],
+    },
+  },
+}));
+
+app.use((req, res, next) => {
+  res.setHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
+  next();
+});
+
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
 app.use(pinoHTTP({
   logger,
   redact: ['req.body.password', 'req.headers.authorization', 'res.headers["set-cookie"]'], placeholder: '[REDACTED]' 
-}));
-
-app.use(helmet());
-
-app.disable('x-powered-by');
-
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
 }));
 
 app.use(express.json());

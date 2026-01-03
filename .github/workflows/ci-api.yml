@@ -151,6 +151,7 @@ jobs:
         uses: zaproxy/action-baseline@v0.13.0
         with:
           target: 'http://127.0.0.1:5500'
+          artifact_name: 'zap-report-${{ github.run_id }}'
           fail_action: false
 
   push-image:
