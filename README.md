@@ -149,7 +149,7 @@ This API uses Arcjet to provide:
 I actively monitor dependencies and patch issues immediately.
 
 Recent Patch: Upgraded express to 4.22.0 to resolve a High-severity Allocation of Resources Without Limits (DoS) vulnerability in the qs dependency detected by Snyk.
-![alt text]()
+![alt text](https://github.com/dev126712/express-api/blob/8ed375171f79fed50d708f4534741119f0d98abd/image.png)
  # 🐳 Docker Support
 The project is container-ready. To build and run:
 ````
