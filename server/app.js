@@ -4,7 +4,7 @@ import arcjetMiddleware from './middleware/arcjet.middleware.js';
 import cors from 'cors';
 import pinoHTTP from 'pino-http';
 import logger from './utils/logger.js';
-
+import helmet from 'helmet'
 import { PORT } from './config/env.js'
 
 
@@ -21,6 +21,10 @@ app.use(pinoHTTP({
   logger,
   redact: ['req.body.password', 'req.headers.authorization', 'res.headers["set-cookie"]'], placeholder: '[REDACTED]' 
 }));
+
+app.use(helmet());
+
+app.disable('x-powered-by');
 
 app.use(cors({
   origin: 'http://localhost:5173',
