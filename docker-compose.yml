@@ -7,16 +7,13 @@ services:
       - "3000:3000"
     env_file:
       - ./server/.env.production.local
-    environment:
-      - DB_URI=${DB_URI}
-      - ARCJET_KEY=${ARCJET_KEY}
-      - JWT_SECRET=${JWT_SECRET}
-      - ARCJET_ENV=development
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
       - ./server/logs:/usr/src/app/logs
       - ./logs:/usr/src/app/logs
+    environment:
+      - ARCJET_ENV=development
     logging:
       driver: "json-file"
       options:

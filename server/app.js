@@ -4,8 +4,8 @@ import arcjetMiddleware from './middleware/arcjet.middleware.js';
 import cors from 'cors';
 import pinoHTTP from 'pino-http';
 import logger from './utils/logger.js';
-import helmet from 'helmet'
-import { PORT } from './config/env.js'
+import helmet from 'helmet';
+import { PORT } from './config/env.js';
 
 
 import userRouter from './routes/user.routes.js';
@@ -52,11 +52,28 @@ app.use(pinoHTTP({
   redact: ['req.body.password', 'req.headers.authorization', 'res.headers["set-cookie"]'], placeholder: '[REDACTED]' 
 }));
 
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjetMiddleware);
 
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS policy violation'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
