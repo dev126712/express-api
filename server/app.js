@@ -14,7 +14,6 @@ import connectDB from './database/mongodb.js';
 import errorMiddleware from './middleware/error.middleware.js';
 import workflowRouter from './routes/workflow.routes.js';
 
-
 const app = express();
 
 app.use(pinoHTTP({
