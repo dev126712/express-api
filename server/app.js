@@ -43,8 +43,8 @@ app.use((req, res, next) => {
   res.setHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
   next();
 });
-
-res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
   res.setHeader('Pragma', 'no-cache');
   next();
 });
