@@ -151,8 +151,20 @@ jobs:
         uses: zaproxy/action-baseline@v0.13.0
         with:
           target: 'http://127.0.0.1:5500'
-          artifact_name: 'zap-report-${{ github.run_id }}'
-          fail_action: false
+          artifact_name: '' 
+          allow_issue_writing: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload ZAP Reports
+        if: always() # Ensure this runs even if the scan found warnings
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-security-report
+          path: |
+            report_html.html
+            report_md.md
+            report_json.json
 
   push-image:
     name: push image to docker hub

@@ -20,17 +20,23 @@ const app = express();
 app.set('trust proxy', true); // Moved to top
 app.disable('x-powered-by');
 
-// --- 2. Security Headers (The "Helmet" configuration) ---
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"], // Fixes: "Failure to Define Directive with No Fallback"
+      // 1. Fixes "Wildcard Directive" (10055)
+      // Avoid using '*' or 'data:' in default-src
+      defaultSrc: ["'self'"], 
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:"],
+      // Only allow images from your own domain
+      imgSrc: ["'self'"], 
+      objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
     },
   },
+  // 2. Fixes "Spectre Vulnerability / Site Isolation" (90004)
+  crossOriginOpenerPolicy: { policy: "same-origin" },
+  crossOriginResourcePolicy: { policy: "same-origin" },
 }));
 
 app.use((req, res, next) => {
@@ -38,8 +44,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  res.set('Cache-Control', 'no-store');
+res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
   next();
 });
 
