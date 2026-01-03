@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-
+import asyncHandler from '../middleware/async.middleware.js'
 export const getUsers = async (req, res, next) => {
   try {
     const users = await User.find();

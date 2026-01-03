@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_EXPIRES_IN, JWT_SECRET } from '../config/env.js';
-
+import  asyncHandler from '../middleware/async.middleware.js' 
 import User from '../models/user.model.js';
 
-export const signUp = async (req, res, next) => {
+export const signUp = asyncHandler(async(req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -35,13 +35,13 @@ export const signUp = async (req, res, next) => {
         });
     } catch (error) {
         await session.abortTransaction();
+        throw error;
+    } finally {
         session.endSession();
-        next(error);
     }
-};
+});
 
-export const signIn = async (req, res, next) => {
-    try {
+export const signIn = asyncHandler(async(req, res, next) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
 
@@ -53,9 +53,8 @@ export const signIn = async (req, res, next) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             const error = new Error('Invalid credentials');
-            error.status = 401;
+            error.statusCode = 401;
             throw error;
-            
         }
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
         res.status(200).json({
@@ -63,10 +62,12 @@ export const signIn = async (req, res, next) => {
             message: 'User signed in successfully',
             data: { user, token }
         });
+});
 
-    } catch (error) {
-        next(error);
-    }
+export const signOut = async (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        message: 'Signed out successfully'
+    });
+
 };
-
-export const signOut = async (req, res, next) => {};

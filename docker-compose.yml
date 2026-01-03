@@ -9,6 +9,16 @@ services:
       - ./server/.env.production.local
     environment:
       - ARCJET_ENV=development
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+      - ./server/logs:/usr/src/app/logs
+      - ./logs:/usr/src/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m" # Rotates when the Docker log hits 10MB
+        max-file: "5"
 
   # Frontend Vite Service
   frontend:

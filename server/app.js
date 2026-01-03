@@ -2,6 +2,8 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import arcjetMiddleware from './middleware/arcjet.middleware.js';
 import cors from 'cors';
+import pinoHTTP from 'pino-http';
+import logger from './utils/logger.js';
 
 import { PORT } from './config/env.js'
 
@@ -14,6 +16,11 @@ import workflowRouter from './routes/workflow.routes.js';
 
 
 const app = express();
+
+app.use(pinoHTTP({
+  logger,
+  redact: ['req.body.password', 'req.headers.authorization', 'res.headers["set-cookie"]'], placeholder: '[REDACTED]' 
+}));
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -40,6 +47,7 @@ app.get('/', (req, res) => {
 
 app.listen( PORT, async () => {
     console.log(`server running on http://localhost:${PORT}`);
+    logger.info(`Server running on http://localhost:${PORT}`);
     await connectDB();
 });
 
