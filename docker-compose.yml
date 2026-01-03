@@ -8,6 +8,9 @@ services:
     env_file:
       - ./server/.env.production.local
     environment:
+      - DB_URI=${DB_URI}
+      - ARCJET_KEY=${ARCJET_KEY}
+      - JWT_SECRET=${JWT_SECRET}
       - ARCJET_ENV=development
     volumes:
       - ./server:/usr/src/app
