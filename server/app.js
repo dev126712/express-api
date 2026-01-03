@@ -26,7 +26,7 @@ app.use(helmet({
       defaultSrc: ["'self'"], 
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:"], 
+      imgSrc: ["'self'"], 
       connectSrc: ["'self'"],
       upgradeInsecureRequests: [],
     },
@@ -34,6 +34,11 @@ app.use(helmet({
   crossOriginOpenerPolicy: { policy: "same-origin" },
   crossOriginResourcePolicy: { policy: "same-origin" },
 }));
+
+app.use((req, res, next) => {
+  res.setHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
+  next();
+});
 
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
