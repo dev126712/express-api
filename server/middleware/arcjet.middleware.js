@@ -3,9 +3,9 @@ import logger from '../utils/logger.js';
 
 const arcjetMiddleware = async (req, res, next) => {
   try {
-    const descision = await aj.protect(req, { requested: 1});
+    const decision = await aj.protect(req, { requested: 1});
 
-    if(descision.isDenied()) {
+    if(decision.isDenied()) {
      logger.warn({
         msg: 'Arcjet Request Denied',
         reason: decision.reason,
@@ -13,8 +13,8 @@ const arcjetMiddleware = async (req, res, next) => {
         path: req.path,
         method: req.method,
       });
-      if(descision.reason.isRateLimit()) return res.status(429).json({ error: 'Rate limit exceeded' });
-      if(descision.reason.isBot()) return res.status(403).json({ error: 'Bot detected' });
+      if(decision.reason.isRateLimit()) return res.status(429).json({ error: 'Rate limit exceeded' });
+      if(decision.reason.isBot()) return res.status(403).json({ error: 'Bot detected' });
 
       return res.status(403).json({ error: 'Access denied' });  
     }
