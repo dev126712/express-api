@@ -18,6 +18,11 @@ env:
   IMAGE_NAME: express-api
   IMAGE_LATEST_TAG: ${{ secrets.GIT_USERNAME }}/express-api:latest
   IMAGE_TAG: express-api:latest, express-api:${{ github.sha }}
+  DB_URI: "" 
+  JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_only' }}
+  ARCJET_KEY: ${{ secrets.ARCJET_KEY || 'aj_test_key' }}
+  QSTASH_TOKEN: "test_token"
+  QSTASH_URL: "https://qstash.upstash.io"
 
 
 jobs:
@@ -120,11 +125,11 @@ jobs:
             -p 5500:5500 \
             --name web-api \
             -e NODE_ENV=development \
-            -e DB_URI="${{ env.DB_URI }}" \
-            -e JWT_SECRET="${{ env.JWT_SECRET }}" \
-            -e ARCJET_KEY="${{ env.ARCJET_KEY }}" \
-            -e QSTASH_TOKEN="${{ env.QSTASH_TOKEN }}" \
-            -e QSTASH_URL="${{ env.QSTASH_URL }}" \
+            -e DB_URI="${{ secrets.DB_URI }}" \
+            -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            -e ARCJET_KEY="${{ secrets.ARCJET_KEY }}" \
+            -e QSTASH_TOKEN="${{ secrets.QSTASH_TOKEN }}" \
+            -e QSTASH_URL="${{ secrets.QSTASH_URL }}" \
             --health-cmd "curl -f http://localhost:5500 || exit 1" \
             --health-interval 5s \
             --health-timeout 5s \
