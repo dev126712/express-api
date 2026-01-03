@@ -1,7 +1,5 @@
 ## SubTracker API
-SubTracker is a high-performance Subscription Management Backend built with Node.js and Express. It provides a centralized platform for users to track recurring expenses, manage payment cycles, and receive automated reminders.
-
-The system is fortified with Arcjet for security and leverages Upstash Workflows to handle long-running automation tasks, such as multi-day email reminder sequences.
+SubTracker is a high-performance, DevSecOps-focused Subscription Management Backend built with Node.js and Express. It provides a centralized platform for users to track recurring expenses, manage payment cycles, and receive automated reminders while maintaining a high security posture through automated scanning and real-time protection.
 ## Key Features
 🔐 Robust Authentication: JWT-based auth with secure cookie support and password hashing.
 
@@ -20,21 +18,23 @@ The system is fortified with Arcjet for security and leverages Upstash Workflows
 -  📦 Transactional Integrity: Uses MongoDB Sessions/Transactions during sign-up to ensure data consistency.
 
 ## 🛠️ Tech Stack
-**Runtime**: Node.js (ES Modules)
-
-**Framework**: Express.js
-
-**Database**: MongoDB with Mongoose
-
-**Security**: Arcjet
-
-**Workflow/Automation**: Upstash Workflow
-
-**Logging**: Pino & Pino-HTTP
-
-**Date Handling**: Day.js
-
-**Containerization**: Docker
+````
+  **Runtime**: Node.js (ES Modules)
+  
+  **Framework**: Express.js
+  
+  **Database**: MongoDB with Mongoose
+  
+  **Security**: Arcjet
+  
+  **Workflow/Automation**: Upstash Workflow
+  
+  **Logging**: Pino & Pino-HTTP
+  
+  **Date Handling**: Day.js
+  
+  **Containerization**: Docker
+````
 
 ## 📁 Project Structure
 ├── config/             # Configuration for Arcjet, Upstash, and Env variables
@@ -49,6 +49,7 @@ The system is fortified with Arcjet for security and leverages Upstash Workflows
 
 ## 🚀 Getting Started
 Prerequisites
+````
 -  Node.js v20+
   
 -  MongoDB instance (Atlas or local)
@@ -56,8 +57,10 @@ Prerequisites
 -  Upstash Account (for QStash/Workflows)
   
 -  Arcjet API Key
-  #### server/
-.env.<development/production>.local
+````
+
+## Configuration
+Create a .env.development.local file in the server folder:
 ````
 PORT=3000
 NODE_ENV='development'
@@ -127,15 +130,11 @@ This API uses Arcjet to provide:
 
 # DevSecOps
 ![alt text](https://github.com/dev126712/dockerized-three-tier-app/blob/64105d4d0de1f6b2286aa6f47ae82d9ba965c086/licensed-image.jpeg)
-#### CI/CD Pipelines
-Workflows:
+#### CI/CD Workflows:
 - ci-ui.yml:
-  - Static scan code with checkov (SAST, SCA)
-  - Build Image
-  - Container security with Trivy (SCA, Image layes scan)
-  - Dynamic scan with OWASP ZAP (DAST)
-  - Push Image to DockerHub
-   
+  - SAST/SCA: Static code scanning with Checkov and Snyk.
+  - Container Security: Image layer scanning with Trivy.
+  - DAST: Dynamic analysis with OWASP ZAP.
 - ci-api.yml:
   - Static scan code with checkov(SAST, SCA)
   - Build Image
@@ -146,20 +145,9 @@ Workflows:
 - security.yml:
   - Scans for security flaws in all the workflows files ".yml" (SAST)
 
- 
-
-|  |   |   |   |
-|------|------|------|------|
-|CREATE|	POST|	/api/v1/user	|Create User|
-READ	|GET|	/api/v1/user	|Gets all users|
-UPDATE	|PUT|	/api/v1/user/:id|	Edits User|
-DELETE|	DELETE|	/api/v1/user/:id	|Delete User|
-
-
-|  |   |   |   |
-|------|------|------|------|
-|CREATE|	POST|	/api/v1/subscriptions	|Adds a new sub|
-READ	|GET|	/api/v1/subscriptions	|Gets all user subs|
-UPDATE	|PUT|	/api/v1/subscriptions/:id|	Edits one sub|
-DELETE|	DELETE|	/api/v1/subscriptions/:id	|Removes one sub|
-
+ # 🐳 Docker Support
+The project is container-ready. To build and run:
+````
+docker build -t subtracker-api .
+docker run -p 3000:3000 --env-file .env.production.local subtracker-api
+````
