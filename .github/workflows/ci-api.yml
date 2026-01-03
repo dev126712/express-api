@@ -115,9 +115,8 @@ jobs:
           name: ${{ env.IMAGE_NAME }}
           path: /tmp
 
-      - name: Start MongoDB and API API for Testing
+      - name: Start API for Testing
         run: |
-          docker run -d --name mongodb -p 27017:27017 mongo:latest
           docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
           
           docker run -d \
