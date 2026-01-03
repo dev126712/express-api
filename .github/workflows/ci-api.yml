@@ -120,11 +120,11 @@ jobs:
             -p 5500:5500 \
             --name web-api \
             -e NODE_ENV=development \
-            -e DB_URI=${{ env.DB_URI }} \
-            -e JWT_SECRET=${{ env.JWT_SECRET }} \
-            -e ARCJET_KEY=${{ env.ARCJET_KEY }} \
-            -e QSTASH_TOKEN=${{ env.QSTASH_TOKEN }} \
-            -e QSTASH_URL=${{ env.QSTASH_URL }} \
+            -e DB_URI="${{ env.DB_URI }}" \
+            -e JWT_SECRET="${{ env.JWT_SECRET }}" \
+            -e ARCJET_KEY="${{ env.ARCJET_KEY }}" \
+            -e QSTASH_TOKEN="${{ env.QSTASH_TOKEN }}" \
+            -e QSTASH_URL="${{ env.QSTASH_URL }}" \
             --health-cmd "curl -f http://localhost:5500 || exit 1" \
             --health-interval 5s \
             --health-timeout 5s \
