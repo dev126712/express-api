@@ -145,6 +145,11 @@ This API uses Arcjet to provide:
 - security.yml:
   - Scans for security flaws in all the workflows files ".yml" (SAST)
 
+ ## Vulnerability Management
+I actively monitor dependencies and patch issues immediately.
+
+Recent Patch: Upgraded express to 4.22.0 to resolve a High-severity Allocation of Resources Without Limits (DoS) vulnerability in the qs dependency detected by Snyk.
+![alt text]()
  # 🐳 Docker Support
 The project is container-ready. To build and run:
 ````
