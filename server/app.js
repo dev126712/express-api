@@ -23,29 +23,22 @@ app.disable('x-powered-by');
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      // 1. Fixes "Wildcard Directive" (10055)
-      // Avoid using '*' or 'data:' in default-src
       defaultSrc: ["'self'"], 
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      // Only allow images from your own domain
-      imgSrc: ["'self'"], 
-      objectSrc: ["'none'"],
+      imgSrc: ["'self'", "data:"], 
+      connectSrc: ["'self'"],
       upgradeInsecureRequests: [],
     },
   },
-  // 2. Fixes "Spectre Vulnerability / Site Isolation" (90004)
   crossOriginOpenerPolicy: { policy: "same-origin" },
   crossOriginResourcePolicy: { policy: "same-origin" },
 }));
 
 app.use((req, res, next) => {
-  res.setHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
-  next();
-});
-app.use((req, res, next) => {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   next();
 });
 
