@@ -17,6 +17,8 @@ WORKDIR /usr/src/app
 
 COPY --from=builder --chown=node:node /usr/src/app/ ./
 
+RUN mkdir -p /usr/src/app/logs && chown -R node:node /usr/src/app/logs
+
 ENV PORT=5500 \
     NODE_ENV=production \
     SERVER_URL="http://localhost:5500"
