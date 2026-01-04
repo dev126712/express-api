@@ -144,22 +144,11 @@ jobs:
             -e QSTASH_URL="${{ secrets.QSTASH_URL }}" \
             ${{ env.IMAGE_NAME }}:latest
           
-          # Wait for the container to become 'healthy'
-          echo "Waiting for API to pass health check..."
-          for i in {1..20}; do
-            if wget -qO- --header="User-Agent: Mozilla/5.0" http://127.0.0.1:5500; then
-              echo "API is up!"
-              exit 0
-            fi
-            echo "Attempt $i: API not ready yet..."
-            sleep 3
-          done
-          docker logs web-api
-          exit 1
+          echo "Waiting for API health..."
+          timeout 60s sh -c 'until curl -sf http://localhost:5500/health; do sleep 2; done'
 
       - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.13.0
-        # This prevents the artifact error from failing your whole build
         continue-on-error: true 
         with:
           target: 'http://127.0.0.1:5500'
