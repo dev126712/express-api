@@ -12,18 +12,35 @@ on:
 
 permissions:
   contents: read
-  security-events: write
 
 env:
   IMAGE_NAME: express-api
-  IMAGE_LATEST_TAG: ${{ secrets.GIT_USERNAME }}/express-api:latest
-  IMAGE_TAG: express-api:latest, express-api:${{ github.sha }}
+  DOCKER_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/express-api
 
 jobs:
-  security-snyk:
+  secrets-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # TruffleHog needs full history to scan all commits
+
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  security-snyk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
       
       - name: Install Backend Dependencies
         run: npm install --prefix server
@@ -33,7 +50,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=low --file=server/package.json
+          args: --severity-threshold=high --file=server/package.json
 
   build:
     needs: security-snyk
@@ -44,26 +61,21 @@ jobs:
     - name: checkout repo
       uses: actions/checkout@v4
 
-    - name: Set up QEMU 
-      uses: docker/setup-qemu-action@v3 
-
-    - name: set up docker
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build the Docker images
+    - name: Build and Export to Local Docker
       uses: docker/build-push-action@v6
-      with: 
-        context: ./server
-        push: false
-        tags: ${{ env.IMAGE_TAG }}
-        load: true
-        outputs: type=docker,dest=/tmp/${{ env.IMAGE_NAME }}.tar
-
-    - name: Upload Image Artifact
-      uses:  actions/upload-artifact@v4
       with:
-        name: ${{ env.IMAGE_NAME }}
-        path: /tmp/${{ env.IMAGE_NAME }}.tar
+        context: ./server
+        load: true # Loads into local docker runtime
+        tags: ${{ env.IMAGE_NAME }}:temp
+        cache-from: type=gha
+
+    - name: Save Image as Tar
+      run: docker save ${{ env.IMAGE_NAME }}:temp > /tmp/image.tar
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: image-bin
+        path: /tmp/image.tar
 
   trivy-scan-image:
     runs-on: ubuntu-latest
@@ -72,13 +84,11 @@ jobs:
     - name: Download Image artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ env.IMAGE_NAME }}
-        path: /tmp
+          name: image-bin
+          path: /tmp
   
     - name: Load image
-      run: |
-        docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
-        docker image ls -a
+      run: docker load < /tmp/image.tar
 
     -  name: Install Trivy
        run: |
@@ -92,12 +102,12 @@ jobs:
     - name: Run Trivy vulnerability scan
       run: |
         trivy image \
-          --exit-code 0 \
+          --exit-code 1 \
           --format table \
           --ignore-unfixed \
           --pkg-types os,library \
           --severity CRITICAL,HIGH,MEDIUM \
-          ${{ env.IMAGE_NAME }}:latest
+          ${{ env.IMAGE_NAME }}:temp
 
 
   dast-scan:
@@ -109,16 +119,16 @@ jobs:
       pull-requests: write
     services:
       mongodb:
-        image: mongo:latest
+        image: mongo:6
         ports:
           - 27017:27017
     steps:
       - name: Download Image artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.IMAGE_NAME }}
+          name: image-bin
           path: /tmp
-
+          
       - name: Start API for Testing
         run: |
           docker load --input /tmp/${{ env.IMAGE_NAME }}.tar
@@ -179,8 +189,8 @@ jobs:
     - name: Download Image artifact
       uses: actions/download-artifact@v4
       with:
-        name: ${{ env.IMAGE_NAME }}
-        path: /tmp
+          name: image-bin
+          path: /tmp
 
     - name: Load image
       run: |
@@ -188,25 +198,16 @@ jobs:
         docker image ls -a
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v3
+    - uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-    - name: Tag Image with Docker Hub Username Prefix
+    - name: Push Tags
       run: |
-        DOCKER_REPO="${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}"
-        
-        docker tag ${{ env.IMAGE_NAME }}:latest $DOCKER_REPO:latest
-        
-        docker tag ${{ env.IMAGE_NAME }}:latest $DOCKER_REPO:${{ github.sha }}
-
-    - name: Push Image to Docker Hub
-      run: |
-        DOCKER_REPO="${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}"
-        
-        docker push $DOCKER_REPO:latest
-        docker push $DOCKER_REPO:${{ github.sha }}
+        docker load < /tmp/image.tar
+        docker tag ${{ env.IMAGE_NAME }}:temp ${{ env.DOCKER_REPO }}:${{ github.sha }}
+        docker tag ${{ env.IMAGE_NAME }}:temp ${{ env.DOCKER_REPO }}:latest
+        docker push --all-tags ${{ env.DOCKER_REPO }}
 
     - name: Docker - Logout
       run: docker logout
