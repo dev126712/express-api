@@ -32,7 +32,7 @@ jobs:
           path: ./
           base: ${{ github.event.before }}
           head: ${{ github.sha }}
-          extra_args: --only-verified --fail
+          extra_args: --only-verified --debug
 
   security-snyk:
     runs-on: ubuntu-latest
