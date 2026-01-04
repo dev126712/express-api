@@ -40,7 +40,7 @@ const subscriptionSchema = new mongoose.Schema({
     },
     startDate: {
         type: Date,
-        required: true,
+        required: [true, 'Start date is required'],
         validate: {
             validator: function(value) {
                 return value <= new Date();

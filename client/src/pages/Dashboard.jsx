@@ -2,11 +2,17 @@ import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
 import { Calendar, DollarSign, Plus, Bell } from 'lucide-react';
 import AddSubscription from '../components/AddSubscription';
+import DeleteSubscription from '../components/DeleteSubscription';
+import UpdateSubscription from '../components/UpdateSubscription';
 
 const Dashboard = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedSubId, setSelectedSubId] = useState(null);
 
   const fetchSubscriptions = async () => {
     try {
@@ -17,6 +23,16 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteClick = (id) => {
+    setSelectedSubId(id);
+    setIsDeleteOpen(true);
+  };
+
+  const handleUpdateClick = (id) => {
+    setSelectedSubId(id);
+    setIsEditOpen(true);
   };
 
   useEffect(() => {
@@ -47,8 +63,7 @@ const Dashboard = () => {
             <Plus size={20} /> Add New
           </button>
         </div>
-
-        {/* Stats Cards */}
+      {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <div className="flex items-center gap-4">
@@ -91,6 +106,18 @@ const Dashboard = () => {
               <div className="mt-4 pt-4 border-t border-gray-50 flex items-center gap-2 text-sm text-gray-500">
                 <Calendar size={14} />
                 <span>Renews: {new Date(sub.renewalDate).toLocaleDateString()}</span>
+                <button 
+                   onClick={() => handleDeleteClick(sub._id)}
+                   className="text-red-500 hover:text-red-700 font-medium transition-colors"
+                 >
+                    Delete
+                </button>
+                <button 
+                  onClick={() => handleUpdateClick(sub._id)}
+                  className="text-blue-500 hover:text-blue-700 font-medium transition-colors"
+                >
+                    Update
+                </button>
               </div>
             </div>
           ))}
@@ -109,6 +136,26 @@ const Dashboard = () => {
           onClose={() => setIsModalOpen(false)} 
           onRefresh={fetchSubscriptions} 
         />
+
+        <DeleteSubscription 
+          isOpen={isDeleteOpen}
+          subscriptionId={selectedSubId}
+          onClose={() => {
+            setIsDeleteOpen(false);
+            setSelectedSubId(null);
+          }}
+          onRefresh={fetchSubscriptions}
+        />
+
+        <UpdateSubscription 
+          isOpen={isEditOpen}
+          subscriptionId={selectedSubId}
+          onClose={() => setIsEditOpen(false)}
+          onRefresh={fetchSubscriptions}
+        />
+
+        
+
       </div>
     </div>
   );

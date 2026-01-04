@@ -18,29 +18,30 @@ export const createSubscription = asyncHandler(async (req, res, next) => {
 });
 
 export const getUserSub = asyncHandler(async (req, res, next) => {
-    if(req.user.id !== req.params.id) {
-        const error = new Error('Unauthorized access. Not the owner of that subscription');
-        error.status = 401;
+    // Compare string versions of IDs to avoid type mismatch errors
+    if (req.user._id.toString() !== req.params.id) { 
+        const error = new Error('Unauthorized access');
+        error.statusCode = 401;
         throw error;
     }
-
-    const subscriptions = await Subscription.find({user: req.params.id})
-
-    res.status(200).json({ success:true, data: subscriptions });
-});   
+    const subscriptions = await Subscription.find({ user: req.params.id });
+    res.status(200).json({ success: true, data: subscriptions });
+});  
 
 export const getSubscriptionById = asyncHandler(async (req, res, next) => {
     const subscription = await Subscription.findById(req.params.id);
 
-    if (subscription.user.toString() !== req.user._id.toString()) {
-        const error = new Error('Not authorized to modify this subscription');
-        error.status = 403;
-        throw error;
-    }
-
+    // 1. Check if subscription exists FIRST
     if (!subscription) {
         const error = new Error('Subscription not found');
         error.status = 404;
+        throw error;
+    }
+
+    // 2. Then check for authorization
+    if (subscription.user.toString() !== req.user._id.toString()) {
+        const error = new Error('Not authorized to access this subscription');
+        error.status = 403;
         throw error;
     }
 

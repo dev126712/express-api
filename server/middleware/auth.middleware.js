@@ -8,8 +8,8 @@ const authorize = asyncHandler(async (req, res, next) => {
     
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
-    }else if (req.cookies && req.cookies.token) {
-     token = req.cookies.token;
+    } else if (req.cookies && req.cookies.token) {
+      token = req.cookies.token;
     }
 
     if(!token) {
@@ -18,18 +18,31 @@ const authorize = asyncHandler(async (req, res, next) => {
         throw error;
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET);
+    try {
+        // Verify the token
+        const decoded = jwt.verify(token, JWT_SECRET);
 
-    const user = await User.findById(decoded.userId).select('-password');;
+        const user = await User.findById(decoded.userId).select('-password');
 
-    if(!user) {
-        const error = new Error('Unauthorized');
-        error.statusCode = 401;
-        throw error;
+        if(!user) {
+            const error = new Error('Unauthorized');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        // Specifically handle expired or invalid tokens
+        if (error.name === 'TokenExpiredError') {
+            error.message = 'Session expired, please log in again';
+            error.statusCode = 401;
+        } else if (error.name === 'JsonWebTokenError') {
+            error.message = 'Invalid token, authorization denied';
+            error.statusCode = 401;
+        }
+        next(error); // Pass to error handler with 401 status
     }
-
-    req.user = user;
-    next();
 });
 
 export const authorizeRole = (role) => {

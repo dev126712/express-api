@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import Login from './pages/Login'; // Assuming you created this earlier
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
@@ -8,7 +7,14 @@ import Dashboard from './pages/Dashboard';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <Router>
