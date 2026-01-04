@@ -12,6 +12,8 @@ const arcjetMiddleware = async (req, res, next) => {
         ip: req.ip,
         path: req.path,
         method: req.method,
+        requestId: decision.id,
+        
       });
       if(decision.reason.isRateLimit()) return res.status(429).json({ error: 'Rate limit exceeded' });
       if(decision.reason.isBot()) return res.status(403).json({ error: 'Bot detected' });

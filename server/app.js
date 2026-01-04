@@ -87,6 +87,14 @@ app.get('/', (req, res) => {
     res.send('welcome to sub tracker api');
 });
 
+// Simple health check for Docker & CI/CD
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'UP', 
+    timestamp: new Date().toISOString() 
+  });
+});
+
 app.listen( PORT, async () => {
     console.log(`server running on http://localhost:${PORT}`);
     logger.info(`Server running on http://localhost:${PORT}`);
