@@ -17,7 +17,6 @@ import workflowRouter from './routes/workflow.routes.js';
 
 const app = express();
 
-
 app.set('trust proxy', true); // Moved to top
 app.disable('x-powered-by');
 
