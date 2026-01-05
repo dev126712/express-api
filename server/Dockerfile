@@ -2,9 +2,11 @@ FROM node:20-alpine AS builder
 
 WORKDIR /usr/src/app
 
+RUN npm install -g npm@latest
+
 COPY --chown=node:node ["package.json", "package-lock.json", "./" ]
 
-RUN npm ci
+RUN npm ci --omit=dev
 
 COPY --chown=node:node . .
 
@@ -12,8 +14,11 @@ COPY --chown=node:node . .
 
 FROM node:20-alpine
 
+RUN apk add --no-cache dumb-init
+
 WORKDIR /usr/src/app
 
+RUN npm install -g npm@latest
 
 COPY --from=builder --chown=node:node /usr/src/app/ ./
 
