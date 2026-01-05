@@ -60,6 +60,8 @@ jobs:
     steps:
     - name: checkout repo
       uses: actions/checkout@v4
+      with:
+          driver: docker-container
 
     - name: Build and Export to Local Docker
       uses: docker/build-push-action@v6
