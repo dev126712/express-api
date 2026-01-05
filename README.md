@@ -37,6 +37,7 @@ SubTracker is a high-performance, DevSecOps-focused Subscription Management Back
 ````
 
 ## 📁 Project Structure
+````
 ├── config/             # Configuration for Arcjet, Upstash, and Env variables
 ├── controllers/        # Business logic (Auth, User, Subscription, Workflow)
 ├── database/           # MongoDB connection and setup
@@ -46,6 +47,7 @@ SubTracker is a high-performance, DevSecOps-focused Subscription Management Back
 ├── utils/              # Pino Logger and helper utilities
 ├── app.js              # Application entry point
 └── Dockerfile          # Production-ready Docker configuration
+````
 
 ## 🚀 Getting Started
 Prerequisites
