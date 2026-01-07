@@ -31,7 +31,7 @@ docker build -t subtracker-api .
 docker run -p 3000:3000 --env-file .env.production.local subtracker-api
 ````
 ### Docker image
-Non-root user:
+  - Non-root user
   - Run command as a non root user reduce the impact of damage if conpromised
   - Multistage image
   - Healthcheck
