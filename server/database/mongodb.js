@@ -7,11 +7,21 @@ if(!DB_URI){
 }
 
 const connectDB = async () => {
+    const start = Date.now();
     try {
         await mongose.connect(DB_URI);
-        logger.info('Successfully connected to MongoDB');
+        const duration = Date.now() - start;
+
+        logger.info({
+            durationMs: duration,
+            env: NODE_ENV,
+            dbHost: new URL(DB_URI).host
+         }, 'MongoDB connected successfully');
+
         console.log(`MongoDB connected successfully in ${NODE_ENV} mode`);
+
     } catch (error) {
+        logger.fatal({ err: error.message, stack: error.stack }, 'MongoDB connection failed');
         console.error('MongoDB connection error:', error);
         process.exit(1);
     }

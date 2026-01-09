@@ -4,8 +4,10 @@ import jwt from 'jsonwebtoken';
 import { JWT_EXPIRES_IN, JWT_SECRET } from '../config/env.js';
 import  asyncHandler from '../middleware/async.middleware.js' 
 import User from '../models/user.model.js';
+import logger from '../utils/logger.js';
 
 export const signUp = asyncHandler(async(req, res, next) => {
+    req.log.info({ email: req.body.email }, 'Processing signup request');
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -25,7 +27,13 @@ export const signUp = asyncHandler(async(req, res, next) => {
 
         const newUser = await User.create([{ name, email, password: hashedPassword }], { session });
         const token = jwt.sign({ userId: newUser[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-        
+
+        logger.info({
+            userId: newUser[0]._id,
+            email: email,
+            event: 'AUTH_SIGNUP_SUCCESS'
+        }, 'User account created');
+
         await session.commitTransaction();
         session.endSession();
         res.status(201).json({

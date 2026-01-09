@@ -11,8 +11,11 @@ const errorMiddleware = (err, req, res, next) => {
             stack: err.stack,
             path: req.path,
             method: req.method,
-            body: req.body,
-        });
+            ip: req.ip,
+            userId: req.user?._id || 'unauthenticated'
+    });
+
+    logger.error(errorData, `Request Error: ${err.message}`);
 
     let statusCode = err.statusCode || err.status || 500;
     let message = err.message;

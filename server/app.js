@@ -87,6 +87,7 @@ app.get('/', (req, res) => {
 
 // Simple health check for Docker & CI/CD
 app.get('/health', (req, res) => {
+  logger.debug('Health check ping received');
   res.status(200).json({ 
     status: 'UP', 
     timestamp: new Date().toISOString() 
