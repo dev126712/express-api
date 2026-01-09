@@ -1,5 +1,52 @@
 ## SubTracker API
 SubTracker is a high-performance, DevSecOps-focused Subscription Management Backend built with Node.js and Express. It provides a centralized platform for users to track recurring expenses, manage payment cycles, and receive automated reminders while maintaining a high security posture through automated scanning and real-time protection.
+
+
+# DevSecOps
+![alt text](https://github.com/dev126712/dockerized-three-tier-app/blob/64105d4d0de1f6b2286aa6f47ae82d9ba965c086/licensed-image.jpeg)
+#### CI/CD Workflows:
+- ci-ui.yml:
+  - SAST/SCA: Static code scanning with Checkov and Snyk.
+  - Container Security: Image layer scanning with Trivy.
+  - DAST: Dynamic analysis with OWASP ZAP.
+- ci-api.yml:
+  - Static scan code with checkov(SAST, SCA)
+  - Build Image
+  - Container security with Trivy (SCA, Image layes scan)
+  - Dynamic scan with OWASP ZAP (DAST)
+  - Push Image to DockerHub
+
+- security.yml:
+  - Scans for security flaws in all the workflows files ".yml" (SAST)
+
+ ## Vulnerability Management
+I actively monitor dependencies and patch issues immediately.
+
+Recent Patch: Upgraded express to 4.22.0 to resolve a High-severity Allocation of Resources Without Limits (DoS) vulnerability in the qs dependency detected by Snyk.
+![alt text](https://github.com/dev126712/express-api/blob/8ed375171f79fed50d708f4534741119f0d98abd/image.png)
+ # 🐳 Docker Support
+The project is container-ready. To build and run:
+````
+docker build -t subtracker-api .
+docker run -p 3000:3000 --env-file .env.production.local subtracker-api
+````
+### Docker image
+  - Non-root user
+  - Run command as a non root user reduce the impact of damage if conpromised
+  - Multistage image
+  - Healthcheck
+  - Small initial image
+
+## 🛡️ Security Policy
+This API uses Arcjet to provide:
+
+-  Rate Limiting: Protects against brute-force attacks.
+  
+-  Bot Detection: Blocks malicious bots while allowing search engines.
+  
+-  Shield: Real-time protection against common web vulnerabilities.
+
+
 ## Key Features
 🔐 Robust Authentication: JWT-based auth with secure cookie support and password hashing.
 
@@ -116,45 +163,4 @@ VITE_API_BASE_URL=http://localhost:3000/api/v1
 | GET | /api/v1/subscription/upcoming-renewals | List subs renewing soon |
 
 
-## 🛡️ Security Policy
-This API uses Arcjet to provide:
 
--  Rate Limiting: Protects against brute-force attacks.
-  
--  Bot Detection: Blocks malicious bots while allowing search engines.
-  
--  Shield: Real-time protection against common web vulnerabilities.
-
-
-
-
-
-
-# DevSecOps
-![alt text](https://github.com/dev126712/dockerized-three-tier-app/blob/64105d4d0de1f6b2286aa6f47ae82d9ba965c086/licensed-image.jpeg)
-#### CI/CD Workflows:
-- ci-ui.yml:
-  - SAST/SCA: Static code scanning with Checkov and Snyk.
-  - Container Security: Image layer scanning with Trivy.
-  - DAST: Dynamic analysis with OWASP ZAP.
-- ci-api.yml:
-  - Static scan code with checkov(SAST, SCA)
-  - Build Image
-  - Container security with Trivy (SCA, Image layes scan)
-  - Dynamic scan with OWASP ZAP (DAST)
-  - Push Image to DockerHub
-
-- security.yml:
-  - Scans for security flaws in all the workflows files ".yml" (SAST)
-
- ## Vulnerability Management
-I actively monitor dependencies and patch issues immediately.
-
-Recent Patch: Upgraded express to 4.22.0 to resolve a High-severity Allocation of Resources Without Limits (DoS) vulnerability in the qs dependency detected by Snyk.
-![alt text](https://github.com/dev126712/express-api/blob/8ed375171f79fed50d708f4534741119f0d98abd/image.png)
- # 🐳 Docker Support
-The project is container-ready. To build and run:
-````
-docker build -t subtracker-api .
-docker run -p 3000:3000 --env-file .env.production.local subtracker-api
-````
