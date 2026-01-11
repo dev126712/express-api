@@ -13,7 +13,7 @@ dist
 
 build/
 coverage/
-logs/
+
 *.log
 *.tsbuildinfo
 eslint.config.js
