@@ -14,9 +14,16 @@ spec:
     spec:
       containers:
       - name: react
-        image: dev126712/client-ui:latest
+        image: dev126712/client-ui:v1.0.5
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
 ---
 apiVersion: v1
 kind: Service
@@ -28,5 +35,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5173
-  type: LoadBalancer 
+      targetPort: 80 # Matches the container port now
+  type: LoadBalancer
