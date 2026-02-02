@@ -19,6 +19,15 @@ spec:
       containers:
       - name: django
         image: dev126712/express-api:v1.2.0 # Use specific tags
+        envFrom:
+          - configMapRef:
+              name: backend-config
+        env:
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: backend-secrets
+                key: DB_PASSWORD
         ports:
         - containerPort: 5500
         resources: # Prevents pod from crashing the node
