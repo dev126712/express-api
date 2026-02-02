@@ -3,7 +3,11 @@ kind: Deployment
 metadata:
   name: backend
 spec:
-  replicas: 2
+  replicas: 3 # Increased for high availability
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: backend
@@ -14,9 +18,26 @@ spec:
     spec:
       containers:
       - name: django
-        image:  dev126712/express-api:latest 
+        image: dev126712/express-api:v1.2.0 # Use specific tags
         ports:
         - containerPort: 5500
+        resources: # Prevents pod from crashing the node
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe: # Restarts pod if it hangs
+          httpGet:
+            path: /health
+            port: 5500
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe: # Don't send traffic until DB is connected
+          httpGet:
+            path: /ready
+            port: 5500
 ---
 apiVersion: v1
 kind: Service
