@@ -23,7 +23,7 @@ spec:
           - configMapRef:
               name: backend-config
         env:
-          - name: DATABASE_PASSWORD
+          - name: DB_URI
             valueFrom:
               secretKeyRef:
                 name: backend-secrets
@@ -39,14 +39,19 @@ spec:
             cpu: "500m"
         livenessProbe: # Restarts pod if it hangs
           httpGet:
-            path: /health
+            path: /
             port: 5500
           initialDelaySeconds: 15
+          timeoutSeconds: 5       # CRITICAL: Increases wait time from 1s to 5s
+          failureThreshold: 3
           periodSeconds: 20
         readinessProbe: # Don't send traffic until DB is connected
           httpGet:
-            path: /ready
+            path: /
             port: 5500
+          initialDelaySeconds: 20  # Increased to give Mongo time
+          timeoutSeconds: 10       # Increased to 10s to avoid the 'deadline exceeded'
+          periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service

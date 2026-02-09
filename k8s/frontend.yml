@@ -16,7 +16,7 @@ spec:
       - name: react
         image: dev126712/client-ui:a04db5caa32693f19316d217b4ebecef1f7c1880
         ports:
-        - containerPort: 80
+        - containerPort: 5173
         resources:
           requests:
             memory: "128Mi"
@@ -35,5 +35,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80 # Matches the container port now
+      targetPort: 5173
   type: LoadBalancer

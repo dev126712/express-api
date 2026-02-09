@@ -3,8 +3,11 @@ kind: ConfigMap
 metadata:
   name: backend-config
 data:
-  DB_HOST: "postgres-service"
-  LOG_LEVEL: "info"
+  #DB_URI: ""
+  #ARCJET_KEY: ""
+  ARCJET_ENV: "production"
+  QSTASH_TOKEN: ""
+  QSTASH_URL: ""
 ---
 apiVersion: v1
 kind: Secret
@@ -12,7 +15,12 @@ metadata:
   name: backend-secrets
 type: Opaque
 data:
-  # 'mysecretpassword' encoded in base64
-  DB_PASSWORD: bXlzZWNyZXRwYXNzd29yZA== 
-  # 'super-secret-api-key' encoded in base64
+  DB_PASSWORD: bXlzZWNyZXRwYXNzd29yZA==
   API_KEY: c3VwZXItc2VjcmV0LWFwaS1rZXk=
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  #VITE_API_BASE_URL: http://localhost:3000/api/v1
