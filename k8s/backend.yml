@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: express-ns 
 spec:
   replicas: 3 # Increased for high availability
   strategy:
