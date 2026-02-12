@@ -4,11 +4,11 @@ metadata:
   name: backend-config
   namespace: express-ns
 data:
-  DB_URI: "mongodb+srv://stforta1_db_user:8RJF2qUUJoAVkthq@cluster0.zqvwnhm.mongodb.net/?appName=Cluster0"
-  ARCJET_KEY: "ajkey_01k6jyd7w6f61r7y5ycg4r09jk"
+  DB_URI: ""
+  ARCJET_KEY: ""
   ARCJET_ENV: "production"
-  QSTASH_TOKEN: "eyJVc2VySUQiOiJkZWZhdWx0VXNlciIsIlBhc3N3b3JkIjoiZGVmYXVsdFBhc3N3b3JkIn0="
-  QSTASH_URL: "https://qstash.upstash.io"
+  QSTASH_TOKEN: ""
+  QSTASH_URL: ""
 ---
 apiVersion: v1
 kind: Secret
