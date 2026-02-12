@@ -45,3 +45,15 @@ resource "google_compute_subnetwork" "proxy_subnet" {
   role          = "ACTIVE"
   region        = "us-central1"
 }
+
+resource "google_compute_firewall" "allow_master_to_nodes" {
+  name    = "allow-master-to-nodes"
+  network = google_compute_network.main.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443", "10250"]
+  }
+
+  source_ranges = ["10.0.0.0/18"]
+}
