@@ -15,9 +15,9 @@ spec:
     spec:
       containers:
       - name: react
-        image: dev126712/client-ui:a04db5caa32693f19316d217b4ebecef1f7c1880
+        image: dev126712/express-ui:v1.2.0
         ports:
-        - containerPort: 5173
+        - containerPort: 80
         resources:
           requests:
             memory: "128Mi"
@@ -32,7 +32,8 @@ metadata:
   name: frontend-service
   namespace: express-ns
   annotations:
-    cloud.google.com/neg: '{"ingress": true}'
+    networking.gke.io/load-balancer-type: "External"
+    cloud.google.com/neg: '{"exposed_ports": {"80":{}}}'
 spec:
   selector:
     app: frontend
@@ -40,5 +41,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5173
+      targetPort: 80
 

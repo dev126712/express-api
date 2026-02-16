@@ -57,7 +57,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjetMiddleware);
 
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://34.55.134.21'];
 
 app.use(cors({
   origin: function (origin, callback) {
