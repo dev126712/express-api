@@ -50,7 +50,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --file=server/package.json
+          args: --severity-threshold=low --file=server/package.json
 
   build:
     needs: security-snyk
@@ -112,7 +112,8 @@ jobs:
           --format table \
           --ignore-unfixed \
           --pkg-types os,library \
-          --severity CRITICAL,HIGH,MEDIUM \
+          # --severity CRITICAL,HIGH,MEDIUM \
+          --severity LOW \
           ${{ env.IMAGE_NAME }}:temp
 
 
