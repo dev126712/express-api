@@ -98,20 +98,8 @@ This API uses Arcjet to provide:
 └── Dockerfile          # Production-ready Docker configuration
 ````
 
-## 🚀 Getting Started
-Prerequisites
-````
--  Node.js v20+
-  
--  MongoDB instance (Atlas or local)
-  
--  Upstash Account (for QStash/Workflows)
-  
--  Arcjet API Key
-````
 
-## Configuration
-Create a .env.development.local file in the server folder:
+## Configuration for Development
 ````
 PORT=3000
 NODE_ENV='development'
@@ -138,31 +126,3 @@ QSTASH_URL="https://qstash.upstash.io"
 ````
 VITE_API_BASE_URL=http://localhost:3000/api/v1
 ````
-
-
-
-
-
-
-
-
-# 🛣️ API Endpoints
-## 🔑 Authentication
-| Method  | Endpoint | Description |
-|-------|-------|-------|
-| POST | /api/v1/auth/sign-up |Register a new user (Transactional) |
-| POST | /api/v1/auth/sign-in | Login & receive JWT |
-| POST | /api/v1/auth/sign-out | Logout user |
-
-## 💳 Subscriptions
-| Method | Endpoint | Description | 
-|-------|-------|-------|
-| GET | /api/v1/subscription | List all subs for current user |
-| POST | /api/v1/subscription | Create a sub & trigger workflow |
-| GET | /api/v1/subscription/:id | Get details (Ownership verified) |
-| PUT | /api/v1/subscription/:id | Update sub (Ownership verified) |
-| DELETE | /api/v1/subscription/:id | Delete sub (Ownership verified) |
-| GET | /api/v1/subscription/upcoming-renewals | List subs renewing soon |
-
-
-
