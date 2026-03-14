@@ -27,7 +27,7 @@ Recent Patch: Upgraded express to 4.22.0 to resolve a High-severity Allocation o
  # 🐳 Docker Support
 The project is container-ready. To build and run:
 ````
-docker build -t subtracker-api .
+docker build -t express-api .
 docker run -p 3000:3000 --env-file .env.production.local subtracker-api
 ````
 ### Docker image
