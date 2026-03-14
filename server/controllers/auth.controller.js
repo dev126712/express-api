@@ -18,7 +18,7 @@ export const signUp = asyncHandler(async(req, res, next) => {
 
         if (existingUser) {
             const error = new Error('User already exists');
-            error.status = 409;
+            error.statusCode = 409;
             throw error;
         }
 
