@@ -15,6 +15,8 @@ SubTracker is a high-performance, DevSecOps-focused Subscription Management Back
   - Container security with Trivy (SCA, Image layes scan)
   - Dynamic scan with OWASP ZAP (DAST)
   - Push Image to DockerHub
+ 
+    ![alt text](https://github.com/dev126712/express-api/blob/8baa728626ee463755ec35c854f6889e94c9c26b/Images/Screenshot%202026-03-13%2011.14.42%20PM.png)
 
 - security.yml:
   - Scans for security flaws in all the workflows files ".yml" (SAST)
@@ -96,20 +98,8 @@ This API uses Arcjet to provide:
 └── Dockerfile          # Production-ready Docker configuration
 ````
 
-## 🚀 Getting Started
-Prerequisites
-````
--  Node.js v20+
-  
--  MongoDB instance (Atlas or local)
-  
--  Upstash Account (for QStash/Workflows)
-  
--  Arcjet API Key
-````
 
-## Configuration
-Create a .env.development.local file in the server folder:
+## Configuration for Development
 ````
 PORT=3000
 NODE_ENV='development'
@@ -136,31 +126,3 @@ QSTASH_URL="https://qstash.upstash.io"
 ````
 VITE_API_BASE_URL=http://localhost:3000/api/v1
 ````
-
-
-
-
-
-
-
-
-# 🛣️ API Endpoints
-## 🔑 Authentication
-| Method  | Endpoint | Description |
-|-------|-------|-------|
-| POST | /api/v1/auth/sign-up |Register a new user (Transactional) |
-| POST | /api/v1/auth/sign-in | Login & receive JWT |
-| POST | /api/v1/auth/sign-out | Logout user |
-
-## 💳 Subscriptions
-| Method | Endpoint | Description | 
-|-------|-------|-------|
-| GET | /api/v1/subscription | List all subs for current user |
-| POST | /api/v1/subscription | Create a sub & trigger workflow |
-| GET | /api/v1/subscription/:id | Get details (Ownership verified) |
-| PUT | /api/v1/subscription/:id | Update sub (Ownership verified) |
-| DELETE | /api/v1/subscription/:id | Delete sub (Ownership verified) |
-| GET | /api/v1/subscription/upcoming-renewals | List subs renewing soon |
-
-
-
