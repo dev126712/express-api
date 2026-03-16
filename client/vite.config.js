@@ -5,8 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   server: {
     hmr: {
-      host: '34.55.134.21', // Replace with your actual frontend Service IP
-      clientPort: 80,
+      host: env.BACKEND_HOST || "localhost",
+      clientPort: parseInt(env.BACKEND_PORT) || 80,
     },
     watch: {
       usePolling: true,

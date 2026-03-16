@@ -5,7 +5,7 @@ import cors from 'cors';
 import pinoHTTP from 'pino-http';
 import logger from './utils/logger.js';
 import helmet from 'helmet';
-import { PORT } from './config/env.js';
+import { PORT, ALLOWED_ORIGINS } from './config/env.js';
 
 import userRouter from './routes/user.routes.js';
 import authRouter from './routes/auth.routes.js';
@@ -13,7 +13,7 @@ import subscriptionRouter from './routes/subscription.routes.js';
 import connectDB from './database/mongodb.js';
 import errorMiddleware from './middleware/error.middleware.js';
 import workflowRouter from './routes/workflow.routes.js';
-
+//import { ALLOWED_ORIGINS } from './config/env.js'; // Ensure this is exported in your env.js
 const app = express();
 
 app.set('trust proxy', true); // Moved to top
@@ -57,9 +57,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjetMiddleware);
 
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://34.55.134.21'];
+/*const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://34.55.134.21'];
 
-app.use(cors({
+ app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
@@ -67,6 +67,24 @@ app.use(cors({
       return callback(new Error('CORS policy violation'), false);
     }
     return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));*/
+const origins = ALLOWED_ORIGINS ? ALLOWED_ORIGINS.split(',') : [];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Check if the incoming origin is in our environment-provided list
+    if (origins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS policy violation'), false);
+    }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

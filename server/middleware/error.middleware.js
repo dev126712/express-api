@@ -15,7 +15,7 @@ const errorMiddleware = (err, req, res, next) => {
             userId: req.user?._id || 'unauthenticated'
     });
 
-    logger.error(errorData, `Request Error: ${err.message}`);
+    logger.error(`Request Error: ${err.message}`);
 
     let statusCode = err.statusCode || err.status || 500;
     let message = err.message;
@@ -44,7 +44,7 @@ const errorMiddleware = (err, req, res, next) => {
             error: error.message || 'Server Error'
         });
     } catch (error) {
-        logger.fatal('Critical failure in Error Middleware:', fatalError);
+        logger.fatal('Critical failure in Error Middleware:', error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
