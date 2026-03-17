@@ -11,6 +11,7 @@ import userRouter from './routes/user.routes.js';
 import authRouter from './routes/auth.routes.js';
 import subscriptionRouter from './routes/subscription.routes.js';
 import connectDB from './database/mongodb.js';
+import mongoose from 'mongoose';
 import errorMiddleware from './middleware/error.middleware.js';
 import workflowRouter from './routes/workflow.routes.js';
 //import { ALLOWED_ORIGINS } from './config/env.js'; // Ensure this is exported in your env.js
