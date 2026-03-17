@@ -16,6 +16,23 @@ import workflowRouter from './routes/workflow.routes.js';
 //import { ALLOWED_ORIGINS } from './config/env.js'; // Ensure this is exported in your env.js
 const app = express();
 
+app.get('/healthz', (req, res) => {
+  res.status(200).json({ status: 'ALIVE' });
+});
+
+// 2. Readiness Probe: Checks if the Database is actually connected
+app.get('/readyz', (req, res) => {
+  // 1 = connected, 2 = connecting
+  const isReady = mongoose.connection.readyState === 1; 
+  
+  if (isReady) {
+    return res.status(200).json({ status: 'READY' });
+  }
+  
+  logger.warn('Readiness check failed: DB not connected');
+  res.status(503).json({ status: 'NOT_READY' });
+});
+
 app.set('trust proxy', true); // Moved to top
 app.disable('x-powered-by');
 
@@ -103,17 +120,7 @@ app.get('/', (req, res) => {
     res.send('welcome to sub tracker api');
 });
 
-// Simple health check for Docker & CI/CD
-app.get('/health', (req, res) => {
-  logger.debug('Health check ping received');
-  res.status(200).json({ 
-    status: 'UP', 
-    timestamp: new Date().toISOString() 
-  });
-});
-
-app.listen( PORT, async () => {
-    console.log(`server running on http://localhost:${PORT}`);
+app.listen(PORT, async () => {
     logger.info(`Server running on http://localhost:${PORT}`);
     await connectDB();
 });
