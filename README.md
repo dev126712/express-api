@@ -1,128 +1,140 @@
-## SubTracker API
-SubTracker is a high-performance, DevSecOps-focused Subscription Management Backend built with Node.js and Express. It provides a centralized platform for users to track recurring expenses, manage payment cycles, and receive automated reminders while maintaining a high security posture through automated scanning and real-time protection.
+# SubTracker API
 
+A subscription management backend built with Node.js and Express. Users track recurring expenses, manage billing cycles, and receive automated renewal reminders — secured with enterprise-grade runtime protection and a full DevSecOps CI/CD pipeline.
 
-# DevSecOps
-![alt text](https://github.com/dev126712/dockerized-three-tier-app/blob/64105d4d0de1f6b2286aa6f47ae82d9ba965c086/licensed-image.jpeg)
-#### CI/CD Workflows:
-- ci-ui.yml:
-  - SAST/SCA: Static code scanning with Checkov and Snyk.
-  - Container Security: Image layer scanning with Trivy.
-  - DAST: Dynamic analysis with OWASP ZAP.
-- ci-api.yml:
-  - Static scan code with checkov(SAST, SCA)
-  - Build Image
-  - Container security with Trivy (SCA, Image layes scan)
-  - Dynamic scan with OWASP ZAP (DAST)
-  - Push Image to DockerHub
- 
-    ![alt text](https://github.com/dev126712/express-api/blob/8baa728626ee463755ec35c854f6889e94c9c26b/Images/Screenshot%202026-03-13%2011.14.42%20PM.png)
+[![My Skills](https://skillicons.dev/icons?i=nodejs,express,mongodb,docker,githubactions)](https://skillicons.dev)
 
-- security.yml:
-  - Scans for security flaws in all the workflows files ".yml" (SAST)
+---
 
- ## Vulnerability Management
-I actively monitor dependencies and patch issues immediately.
+## Features
 
-Recent Patch: Upgraded express to 4.22.0 to resolve a High-severity Allocation of Resources Without Limits (DoS) vulnerability in the qs dependency detected by Snyk.
-![alt text](https://github.com/dev126712/express-api/blob/8ed375171f79fed50d708f4534741119f0d98abd/image.png)
- # 🐳 Docker Support
-The project is container-ready. To build and run:
-````
-docker build -t express-api .
-docker run -p 3000:3000 --env-file .env.production.local subtracker-api
-````
-### Docker image
-  - Non-root user
-  - Run command as a non root user reduce the impact of damage if conpromised
-  - Multistage image
-  - Healthcheck
-  - Small initial image
+### Application
+- **Subscription tracking** — frequencies (daily/weekly/monthly/yearly), categories, currencies
+- **JWT authentication** — secure cookie support, bcrypt password hashing
+- **Ownership middleware** — strict data isolation; users can only access their own records
+- **Automated reminders** — Upstash Workflow sends renewal alerts 7, 5, 2, and 1 day(s) before due
+- **MongoDB transactions** — atomic writes during sign-up for data consistency
+- **Structured logging** — Pino + Pino-HTTP with log rotation and sensitive field redaction
 
-## 🛡️ Security Policy
-This API uses Arcjet to provide:
+### Runtime Security (Arcjet)
+| Protection | Detail |
+|---|---|
+| **Rate limiting** | Brute-force protection on auth endpoints |
+| **Bot detection** | Blocks malicious bots, allows search engine crawlers |
+| **Shield** | Real-time protection against common web vulnerabilities |
 
--  Rate Limiting: Protects against brute-force attacks.
-  
--  Bot Detection: Blocks malicious bots while allowing search engines.
-  
--  Shield: Real-time protection against common web vulnerabilities.
+---
 
+## DevSecOps CI/CD Pipeline
 
-## Key Features
-🔐 Robust Authentication: JWT-based auth with secure cookie support and password hashing.
+Three GitHub Actions workflows run on every push.
 
-🛡️ Enterprise-Grade Security:
+### `ci-api.yml` — Backend pipeline
 
--  Arcjet Integration: Bot detection, rate limiting, and SQL/XSS protection.
-  
--  Ownership Middleware: Strict data isolation—users can only access their own subscriptions.
-  
--  ⚙️ Automated Workflows: Powered by Upstash to send reminders 7, 5, 2, and 1 days before a subscription renews.
-  
-  -  📊 Subscription Tracking: Support for various frequencies (daily, weekly, monthly, yearly), categories, and     currencies.
-  
--  ⚡ Performance & Logging: High-performance structured logging using Pino with log rotation and redaction for sensitive data.
-  
--  📦 Transactional Integrity: Uses MongoDB Sessions/Transactions during sign-up to ensure data consistency.
+| Stage | Tool | What it does |
+|---|---|---|
+| SAST / SCA | Checkov + Snyk | Static code + dependency vulnerability scan |
+| Build | Docker Buildx | Builds the production image |
+| Container scan | Trivy | Scans image for CVEs |
+| DAST | OWASP ZAP | Dynamic scan against the running container |
+| Publish | Docker Hub | Pushes to registry |
 
-## 🛠️ Tech Stack
-````
-  **Runtime**: Node.js (ES Modules)
-  
-  **Framework**: Express.js
-  
-  **Database**: MongoDB with Mongoose
-  
-  **Security**: Arcjet
-  
-  **Workflow/Automation**: Upstash Workflow
-  
-  **Logging**: Pino & Pino-HTTP
-  
-  **Date Handling**: Day.js
-  
-  **Containerization**: Docker
-````
+### `ci-ui.yml` — Frontend pipeline
+Same stages as the backend (Checkov → Trivy → OWASP ZAP).
 
-## 📁 Project Structure
-````
-├── config/             # Configuration for Arcjet, Upstash, and Env variables
-├── controllers/        # Business logic (Auth, User, Subscription, Workflow)
-├── database/           # MongoDB connection and setup
-├── middleware/         # Security, Auth, and Centralized Error Handling
-├── models/             # Mongoose Schemas (User, Subscription)
-├── routes/             # API Endpoints
-├── utils/              # Pino Logger and helper utilities
-├── app.js              # Application entry point
-└── Dockerfile          # Production-ready Docker configuration
-````
+### `security.yml`
+Checkov SAST on all `.github/workflows/*.yml` files.
 
+### Docker Image Hardening
+- Non-root user — reduced blast radius if compromised
+- Multi-stage build — no dev tooling in the production image
+- Health check
+- Pinned base image (Alpine)
 
-## Configuration for Development
-````
+### Vulnerability Management
+Dependencies are actively monitored. Example: upgraded `express` to 4.22.0 to patch a High-severity DoS vulnerability in the `qs` dependency detected by Snyk.
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|---|---|
+| **Runtime** | Node.js (ES Modules) |
+| **Framework** | Express.js |
+| **Database** | MongoDB + Mongoose |
+| **Auth** | JWT (secure cookie) + bcrypt |
+| **Runtime security** | Arcjet |
+| **Workflow automation** | Upstash Workflow (QStash) |
+| **Logging** | Pino + Pino-HTTP |
+| **Container** | Docker (multi-stage, non-root) |
+
+---
+
+## Quick Start
+
+```bash
+git clone https://github.com/dev126712/express-api
+cd express-api
+cp .env.example .env.development.local   # fill in DB_URI, JWT_SECRET, ARCJET_KEY, QSTASH_TOKEN
+```
+
+### Docker
+
+```bash
+docker build -t subtracker-api .
+docker run -p 3000:3000 --env-file .env.development.local subtracker-api
+```
+
+### Local (Node)
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## Configuration
+
+```env
 PORT=3000
-NODE_ENV='development'
-SERVER_URL="http://localhost:5500"
+NODE_ENV=development
+SERVER_URL=http://localhost:5500
 
-# Database
-DB_URI=
+DB_URI=                          # MongoDB connection string
+JWT_SECRET=                      # Random secret, min 32 chars
+JWT_EXPIRES_IN=1d
 
-# JWT
-JWT_SECRET=
-JWT_EXPIRES_IN="1d"
+ARCJET_KEY=                      # Get from arcjet.com
+ARCJET_ENV=development
 
-# Arcjet
-ARCJET_KEY=
-ARCJET_ENV="development"
+QSTASH_TOKEN=                    # Upstash QStash token
+QSTASH_URL=https://qstash.upstash.io
+```
 
-# UPSTASH
-QSTASH_TOKEN=
-QSTASH_URL="https://qstash.upstash.io"
-````
+---
 
-#### client/
-.env.<development/production>.local
-````
-VITE_API_BASE_URL=http://localhost:3000/api/v1
-````
+## Project Structure
+
+```
+express-api/
+├── app.js                  # Application entry point
+├── Dockerfile              # Multi-stage production image
+├── config/                 # Arcjet, Upstash, env config
+├── controllers/            # Auth, User, Subscription, Workflow handlers
+├── database/               # MongoDB connection
+├── middleware/             # Auth, ownership, error handling
+├── models/                 # Mongoose schemas (User, Subscription)
+├── routes/                 # API route definitions
+└── utils/                  # Pino logger, helpers
+```
+
+---
+
+## Related Repos
+
+| Repo | Role |
+|---|---|
+| [express-api-CD](https://github.com/dev126712/express-api-CD) | Kustomize manifests + ArgoCD for K8s deployment |
+| [express-api-Infrastructure](https://github.com/dev126712/express-api-Infrastructure) | Terraform GKE cluster |
